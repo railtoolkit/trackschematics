@@ -1,0 +1,20 @@
+[package]
+name = "railtoolkit-trackschematics"
+version = "0.1.0"
+entrypoint = "src/lib.typ"
+authors = ["Gregor Wehrle"]
+license = "ISC"
+description = "Effortlessly draw track schematics."
+repository = "https://codeberg.org/RailToolKit/trackschematics"
+keywords = [
+    "rail",
+    "railway",
+    "track diagram",
+    "track network",
+    "tracks",
+    "rail schematics",
+]
+categories = ["visualization"]
+disciplines = ["engineering", "transportation"]
+
+[tool]
