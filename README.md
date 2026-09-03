@@ -1,4 +1,3 @@
-
 # RailToolkit track schematics
 
 [![User Manual](https://img.shields.io/badge/manual-.pdf-purple)][manual]
@@ -6,7 +5,7 @@
 Typst package for drawing track schematics based on [CeTZ](https://cetz-package.github.io/).
 
 
-![image](/tests/usage/basic/ref/1.png)
+![image](tests/usage/basic/ref/1.png)
 
 ```typ
 #import "@preview/railtoolkit-trackschematics:0.1.0"
@@ -39,4 +38,4 @@ See [manual][manual] for further documentation.
 
 This package is distributed under the ISC License.
 
-[manual]: /docs/manual.pdf
+[manual]: docs/manual.pdf
