@@ -82,7 +82,7 @@
 
     cetz.draw.scope({
       cetz.draw.set-origin(t.center)
-      (t.draw)(..drawing-angles, ..t.style)
+      (t.draw)(..drawing-angles, ..t.styles)
     })
   }
 }

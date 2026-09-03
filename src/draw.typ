@@ -40,17 +40,21 @@
   /// Anchor name.
   /// -> none | str
   name: none,
-) = track-type(
-  (pts, ..style, kind: "main") => {
+) = {
+  let type-def = (
+    name: "track",
+    default-styles: (stroke: 1pt, main: (stroke: 2pt)),
+    draw: (pts, ..styles) => {
     if kind == "main" {
-      style = set-style-to(style, "main")
+        styles = set-style-to(styles, "main")
     }
 
-    cetz.draw.line(..pts, ..style)
-  },
-  type-name: "track",
-  default-style: (stroke: 1pt, main: (stroke: 2pt)),
-)(..points, kind: kind, stroke: stroke, name: name)
+      cetz.draw.line(..pts, ..styles, name: name)
+    },
+  )
+
+  track-type(type-def, points.pos(), stroke: stroke, name: name)
+}
 
 
 /// Draws a turnout
@@ -79,12 +83,16 @@
   /// Anchor name.
   /// -> none | str
   name: none,
-) = turnout-type(
-  (ang1, ang2, ..style) => {
+) = {
+  let type-def = (
+    name: "turnout",
+    default-styles: (fill: auto, stroke: none),
+    draw: (ang1, ang2, ..style) => {
     let r = a => if calc.rem(a.deg(), 90) == 0 { 0.4 } else { calc.sqrt(2) * 0.4 }
 
-    cetz.draw.line((0, 0), (ang1, r(ang1)), (ang2, r(ang2)), ..style)
-  },
-  type-name: "turnout",
-  default-style: (fill: auto, stroke: none),
-)(point, fill: fill, stroke: stroke, name: name)
+      cetz.draw.line((0, 0), (ang1, r(ang1)), (ang2, r(ang2)), ..style, name: name)
+    },
+  )
+
+  turnout-type(type-def, point, fill: fill, stroke: stroke, name: name)
+}

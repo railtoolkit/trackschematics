@@ -11,128 +11,135 @@
   cetz.styles.resolve(style, merge: style.at(name))
 }
 
-#let base-type(type-fn, type-name: none, default-style: (:), ..args) = (..pts-style) => {
+#let base-type(type-def) = {
   init()
+
+  assert("name" in type-def.keys())
+  assert("default-styles" in type-def.keys())
+
+  let (default-styles, name) = type-def
 
   // Add default styles for type if not added yet
   cetz.draw.set-ctx(ctx => {
-    if type-name not in ctx.style {
-      let style = default-style
+    if name not in ctx.style {
+      let style = default-styles
 
       // Respect previously set styles by the user
-      if type-name in ctx.style {
-        style = cetz.styles.resolve(style, merge: ctx.style.at(type-name))
+      if name in ctx.style {
+        style = cetz.styles.resolve(style, merge: ctx.style.at(name))
       }
 
       // Add styles to ctx
-      ctx.style = cetz.styles.merge(ctx.style, ((type-name): style))
+      ctx.style = cetz.styles.merge(ctx.style, ((name): style))
     }
 
     ctx
   })
+}
 
-  // Get styles currently in effect for type
-  cetz.draw.get-ctx(ctx => {
-    let style = cetz.styles.resolve(ctx.style, merge: pts-style.named(), root: type-name)
+#let resolve-styles(ctx, styles, root) = {
+  styles = cetz.styles.resolve(ctx.style, merge: styles, root: root)
 
-    // If fill is not specified (none) default to stroke paint
-    // This implicates that fill=none on global level is always ignored for trackschematics
-    if "fill" in ctx.style.at(type-name) and ctx.style.at(type-name).fill == auto {
-      if style.fill == none and "paint" in ctx.style.stroke {
-        style.fill = ctx.style.stroke.paint
-      }
+  // If fill is not specified (none) default to stroke paint
+  // This implicates that fill=none on global level is always ignored for trackschematics
+  if "fill" in ctx.style.at(root) and ctx.style.at(root).fill == auto {
+    if styles.fill == none and "paint" in ctx.style.stroke {
+      styles.fill = ctx.style.stroke.paint
     }
+  }
 
-    type-fn(pts-style.pos(), ..style)
+  styles
+}
+
+#let track-type(type-def, points, name: none, ..args) = {
+  base-type(type-def)
+
+  assert("name" in type-def.keys())
+  assert("draw" in type-def.keys())
+
+  assert(points.len() > 1, message: "track expects at least two points, got" + str(points.len()))
+
+  cetz.draw.get-ctx(ctx => {
+    let (ctx, ..pts) = cetz.coordinate.resolve(ctx, ..points)
+    let styles = resolve-styles(ctx, args.named(), type-def.name)
+
+    cetz.draw.set-ctx(ctx => {
+      // If coordinate is an anchor referencencing a turnout add the track to the ports of the turnout
+      ctx = link-track-to-turnouts(ctx, pts)
+
+      if name == none {
+        ctx.trackschematics.tracks.push(pts)
+      } else {
+        ctx.trackschematics.tracks.push(name)
+      }
+
+      ctx
+    })
+
+    cetz.draw.get-ctx(ctx => draw-finished-turnouts(ctx))
+
+    (type-def.draw)(pts, ..styles)
   })
 }
 
-#let track-type(draw, ..args) = base-type(
-  (points, ..style, name: none) => {
-    assert(points.len() > 1, message: "track expects at least two points, got" + str(points.len()))
+#let turnout-type(type-def, point, name: none, ..args) = {
+  base-type(type-def)
 
-    cetz.draw.get-ctx(ctx => {
-      let (ctx, ..pts) = cetz.coordinate.resolve(ctx, ..points)
+  assert("draw" in type-def.keys())
 
+  cetz.draw.get-ctx(ctx => {
+    let center-raw = point
+    let (ctx, center) = cetz.coordinate.resolve(ctx, center-raw)
+    let styles = resolve-styles(ctx, args.named(), type-def.name)
+
+    // Add anchor for turnout center
+    if name != none {
+      cetz.draw.anchor(name, center)
+    } // Update previous position when having no anchor
+    else {
       cetz.draw.set-ctx(ctx => {
-        // If coordinate is an anchor referencencing a turnout add the track to the ports of the turnout
-        ctx = link-track-to-turnouts(ctx, pts)
-
-        if name == none {
-          ctx.trackschematics.tracks.push(pts)
-        } else {
-          ctx.trackschematics.tracks.push(name)
-        }
-
+        ctx.prev.insert("pt", center)
         ctx
       })
+    }
 
-      cetz.draw.get-ctx(ctx => draw-finished-turnouts(ctx))
+    let ports = ()
 
-      draw(pts, ..style, name: name)
-    })
-  },
-  ..args,
-)
+    // Loop over all tracks to check if turnout is on existing track
+    for track in ctx.trackschematics.tracks {
+      let points = track
 
-#let turnout-type(draw, ..args) = base-type(
-  (points, ..style, name: none, connect-track: none) => {
-    assert(points.len() == 1, message: "turnout expects one point, got" + str(points.len()))
-
-    cetz.draw.get-ctx(ctx => {
-      let center-raw = points.at(0)
-      let (ctx, center) = cetz.coordinate.resolve(ctx, center-raw)
-
-      // Add anchor for turnout center
-      if name != none {
-        cetz.draw.anchor(name, center)
-      } // Update previous position when having no anchor
-      else {
-        cetz.draw.set-ctx(ctx => {
-          ctx.prev.insert("pt", center)
-          ctx
-        })
+      if type(track) == str {
+        points = drawables-to-points(cetz, ctx, track)
       }
 
-      let ports = ()
+      for index in range(0, points.len() - 1) {
+        if point-is-on-line(center, points.at(index), points.at(index + 1)) {
+          if center != points.at(index) {
+            ports.push(cetz.vector.angle2(center, points.at(index)))
+          }
 
-      // Loop over all tracks to check if turnout is on existing track
-      for track in ctx.trackschematics.tracks {
-        let points = track
-
-        if type(track) == str {
-          points = drawables-to-points(cetz, ctx, track)
-        }
-
-        for index in range(0, points.len() - 1) {
-          if point-is-on-line(center, points.at(index), points.at(index + 1)) {
-            if center != points.at(index) {
-              ports.push(cetz.vector.angle2(center, points.at(index)))
-            }
-
-            if center != points.at(index + 1) {
-              ports.push(cetz.vector.angle2(center, points.at(index + 1)))
-            }
+          if center != points.at(index + 1) {
+            ports.push(cetz.vector.angle2(center, points.at(index + 1)))
           }
         }
       }
+    }
 
-      // Save turnout so that it can be drawn when ports are filled
-      cetz.draw.set-ctx(ctx => {
-        ctx.trackschematics.turnouts.push(
-          (
-            center: center,
-            style: style,
-            ports: ports,
-            draw: draw,
-          ),
-        )
+    // Save turnout so that it can be drawn when ports are filled
+    cetz.draw.set-ctx(ctx => {
+      ctx.trackschematics.turnouts.push(
+        (
+          center: center,
+          styles: styles,
+          ports: ports,
+          draw: type-def.draw,
+        ),
+      )
 
-        ctx
-      })
-
-      cetz.draw.get-ctx(ctx => draw-finished-turnouts(ctx))
+      ctx
     })
-  },
-  ..args,
-)
+  })
+  cetz.draw.get-ctx(ctx => draw-finished-turnouts(ctx))
+}
+
