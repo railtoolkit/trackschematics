@@ -143,3 +143,38 @@
   cetz.draw.get-ctx(ctx => draw-finished-turnouts(ctx))
 }
 
+#let end-of-track-type(type-def, point, ..args) = {
+  base-type(type-def)
+
+  assert("draw" in type-def.keys())
+
+  cetz.draw.get-ctx(ctx => {
+    let (ctx, point) = cetz.coordinate.resolve(ctx, point)
+    let styles = resolve-styles(ctx, args.named(), type-def.name)
+
+    let dir
+    for track in ctx.trackschematics.tracks {
+      if type(track) == str {
+        track = drawables-to-points(cetz, ctx, track)
+      }
+
+      if track.at(0) == point {
+        dir = cetz.vector.angle2(track.at(1), point)
+        break
+      }
+
+      if track.at(-1) == point {
+        dir = cetz.vector.angle2(track.at(-2), point)
+        break
+      }
+    }
+
+    assert(dir != none, message: "Could not find track end or start.")
+
+    cetz.draw.scope({
+      cetz.draw.set-origin(point)
+      cetz.draw.rotate(dir)
+      (type-def.draw)(..styles)
+    })
+  })
+}
