@@ -85,7 +85,7 @@
 
   let pts = x-or-y-coordinate-on-track(cetz, ctx, track, x: x, y: y)
 
-  assert(pts.len() == 1, message: "Track referencing coordinate couln't find correct coordinate.")
+  assert(pts.len() == 1, message: "Track referencing coordinate couldn't find correct coordinate.")
 
   return pts.at(0)
 }
