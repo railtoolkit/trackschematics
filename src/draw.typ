@@ -73,9 +73,9 @@
     name: "track",
     default-styles: (stroke: 1pt, main: (stroke: 2pt)),
     draw: (pts, ..styles) => {
-    if kind == "main" {
+      if kind == "main" {
         styles = set-style-to(styles, "main")
-    }
+      }
 
       cetz.draw.line(..pts, ..styles, name: name)
 
@@ -123,10 +123,10 @@
   let type-def = (
     name: "turnout",
     default-styles: (fill: auto, stroke: none),
-    draw: (ang1, ang2, ..style) => {
-    let r = a => if calc.rem(a.deg(), 90) == 0 { 0.4 } else { calc.sqrt(2) * 0.4 }
+    draw: (ang1, ang2, ..styles) => {
+      let r = a => if calc.rem(a.deg(), 90) == 0 { 0.4 } else { calc.sqrt(2) * 0.4 }
 
-      cetz.draw.line((0, 0), (ang1, r(ang1)), (ang2, r(ang2)), ..style, name: name)
+      cetz.draw.line((0, 0), (ang1, r(ang1)), (ang2, r(ang2)), ..styles, name: name)
     },
   )
 
