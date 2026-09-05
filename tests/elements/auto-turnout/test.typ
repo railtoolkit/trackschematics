@@ -8,56 +8,28 @@
 
 // Keep this so its possible to overwrite it when testing specific cases
 #let diverging_points = possible_points
-#let alternatives = range(0, 3)
 
 
-// #let possible_points = ((1, 1),)
-// #let diverging_points = ((-1, 0),)
-// #let alternatives = (0,)
+// #let possible_points = ((0, -1),)
+// #let diverging_points = ((0, -1), (0, 1))
 
-/*
-  Helper function
-*/
-#let possible-directions(point) = {
-  let center = (0, 0)
+#let possible-directions(index) = {
+  let cp = diverging_points
+  let points = cp.slice(index + 1)
 
-  let dir = (
-    center.at(0) - point.at(0),
-    center.at(1) - point.at(1),
-  )
-
-  if dir.at(0) == 0 {
-    let y = center.at(1) + dir.at(1)
-    return (
-      (center.at(0), y),
-      (center.at(0) - 1, y),
-      (center.at(0) + 1, y),
-    )
+  if type(points) == int {
+    points = (points,)
   }
 
-  if dir.at(1) == 0 {
-    let x = center.at(0) + dir.at(0)
-    return (
-      (x, center.at(1)),
-      (x, center.at(1) - 1),
-      (x, center.at(1) + 1),
-    )
-  }
-
-  (
-    (center.at(0) + dir.at(0), center.at(1) + dir.at(1)),
-    (center.at(0), center.at(1) + dir.at(1)),
-    (center.at(0) + dir.at(0), center.at(1)),
-  )
+  points
 }
 
 #grid(
-  columns: 3,
+  columns: 4,
   gutter: 5em,
-  ..for straight_start in possible_points {
-    let possible-dirs = possible-directions(straight_start)
-    for i in alternatives {
-      let straight_end = possible-dirs.at(i)
+  ..for (index, straight_start) in possible_points.enumerate() {
+    let possible-dirs = possible-directions(index)
+    for straight_end in possible-dirs {
       (
         grid(
           columns: diverging_points.len(),
@@ -91,12 +63,11 @@
 #pagebreak()
 
 #grid(
-  columns: 3,
+  columns: 4,
   gutter: 5em,
-  ..for straight_start in possible_points {
-    let possible-dirs = possible-directions(straight_start)
-    for i in alternatives {
-      let straight_end = possible-dirs.at(i)
+  ..for (index, straight_start) in possible_points.enumerate() {
+    let possible-dirs = possible-directions(index)
+    for straight_end in possible-dirs {
       (
         grid(
           columns: diverging_points.len(),
@@ -124,3 +95,44 @@
   }
 )
 
+#pagebreak()
+
+#grid(
+  columns: 4,
+  gutter: 5em,
+  ..for (index, straight_start) in possible_points.enumerate() {
+    let possible-dirs = possible-directions(index)
+    for straight_end in possible-dirs {
+      (
+        grid(
+          columns: diverging_points.len(),
+          gutter: 1em,
+          ..for (index, diverging_start) in diverging_points.enumerate() {
+            let possible-dirs = possible-directions(index)
+            for diverging_end in possible-dirs {
+              (
+                cetz.canvas({
+                  import cetz.draw: *
+                  import railtoolkit-trackschematics.draw: *
+
+                  // For correct centering of the turnout
+                  rect((-1, -1), (1, 1), stroke: none)
+                  track(straight_start, (0, 0), straight_end, name: "T1")
+
+                  if straight_start.at(0) == 0 {
+                    turnout((track: "T1", y: 0), name: "W1")
+                  } else {
+                    turnout((track: "T1", x: 0), name: "W1")
+                  }
+
+                  track((0, 0), diverging_start, stroke: purple)
+                  track((0, 0), diverging_end, stroke: purple)
+                }),
+              )
+            }
+          }
+        ),
+      )
+    }
+  }
+)

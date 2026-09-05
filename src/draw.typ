@@ -180,16 +180,55 @@
 }
 
 
-/// Draws a turnout
+/// Draws a turnout.
+///
+/// Connecting tracks are automatically detected and a turnout is drawn as soon as the turnout is connected on all three sides.
+/// The Symbol is automatically placed in the correct orientation.
+///
+/// Turnouts are only drawn if the match the angle pattern of the two types:
+///
+/// - straight + 45° diverging branch
+/// - two 45° diverging branches
 ///
 /// ```examplec
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
-/// track((), (e: 8))
-/// track((3,0), (ne: 1), (e: 4))
-/// turnout((3,0))
+/// track((), (e: 3), name: "tr-1")
+/// turnout((track: "tr-1", x: 1))
+/// track((), (ne: 1), (e: 1))
+///
+/// track(
+///   (4,0), (e:1), (ne:1), (e:1),
+///   name: "tr-2"
+/// )
+/// turnout((track: "tr-2", x: 5))
+/// track((), (se: 1), (e:1))
 /// >>> })
 /// ```
+///
+/// Three way switches are supported
+///
+/// ```examplec
+/// >>> cetz.canvas({
+/// >>> import rts.draw: *
+/// track((), (e: 4), name: "tr-1")
+/// turnout((track: "tr-1", x: 1), name: "to-1")
+/// track("to-1", (se: 1), (e: 2))
+/// track("to-1", (ne: 1), (e: 2))
+/// >>> })
+/// ```
+///
+/// With four connections the switch converts to a slip switch
+///
+/// ```examplec
+/// >>> cetz.canvas({
+/// >>> import rts.draw: *
+/// track((), (e: 8), name: "tr-1")
+/// track((0,-1), (e:1), (ne: 2), (e: 5))
+/// turnout((track: "tr-1", x:2))
+/// >>> })
+/// ```
+///
 #let turnout(
   /// Positional coordinate to draw the turnout.
   /// -> coordinate
@@ -213,7 +252,7 @@
     draw: (ang1, ang2, ..styles) => {
       let r = a => if calc.rem(a.deg(), 90) == 0 { 0.4 } else { calc.sqrt(2) * 0.4 }
 
-      cetz.draw.line((0, 0), (ang1, r(ang1)), (ang2, r(ang2)), ..styles, name: name)
+      cetz.draw.line((0, 0), (ang1, r(ang1)), (ang2, r(ang2)), ..styles)
     },
   )
 
