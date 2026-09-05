@@ -50,28 +50,28 @@
         let v = c.values().at(0)
 
         if type(v) == int or type(v) == float {
-          if key == "n" { c = (rel: (0, v)) }
-          if key == "e" { c = (rel: (v, 0)) }
-          if key == "s" { c = (rel: (0, -v)) }
-          if key == "w" { c = (rel: (-v, 0)) }
-          if key == "ne" { c = (rel: (v, v)) }
-          if key == "se" { c = (rel: (v, -v)) }
-          if key == "sw" { c = (rel: (-v, -v)) }
-          if key == "nw" { c = (rel: (-v, v)) }
+          if key == "north" { c = (rel: (0, v)) }
+          if key == "east" { c = (rel: (v, 0)) }
+          if key == "south" { c = (rel: (0, -v)) }
+          if key == "west" { c = (rel: (-v, 0)) }
+          if key == "north-east" { c = (rel: (v, v)) }
+          if key == "south-east" { c = (rel: (v, -v)) }
+          if key == "south-west" { c = (rel: (-v, -v)) }
+          if key == "north-west" { c = (rel: (-v, v)) }
         }
 
         if type(v) == str {
           let resolved
           let prev = ctx.prev.pt
           let dir = {
-            if key == "n" { (0, 1) }
-            if key == "e" { (1, 0) }
-            if key == "s" { (0, 1) }
-            if key == "w" { (-1, 0) }
-            if key == "ne" { (1, 1) }
-            if key == "se" { (1, -1) }
-            if key == "sw" { (-1, -1) }
-            if key == "nw" { (-1, 1) }
+            if key == "north" { (0, 1) }
+            if key == "east" { (1, 0) }
+            if key == "south" { (0, 1) }
+            if key == "west" { (-1, 0) }
+            if key == "north-east" { (1, 1) }
+            if key == "south-east" { (1, -1) }
+            if key == "south-west" { (-1, -1) }
+            if key == "north-west" { (-1, 1) }
           }
 
           let points = drawables-to-points(cetz, ctx, v)

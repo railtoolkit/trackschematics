@@ -9,9 +9,9 @@
 
   set-style(stroke: purple)
 
-  track((0, 0), (e: 4), name: "Tr1", kind: "secondary")
+  track((0, 0), (east: 4), name: "Tr1", kind: "secondary")
   turnout("Tr1.2", name: "T1")
-  track("T1", (ne: 2))
+  track("T1", (north-east: 2))
 })
 
 #pagebreak()
@@ -22,7 +22,7 @@
 
   set-style(stroke: blue, fill: navy, turnout: (stroke: 1pt), track: (stroke: eastern, main: (stroke: purple + 4pt)))
 
-  track((0, 0), (e: 4), name: "Tr1", kind: "secondary")
+  track((0, 0), (east: 4), name: "Tr1", kind: "secondary")
   turnout("Tr1.2", name: "T1")
-  track("T1", (ne: 2), type: "secondary", stroke: purple)
+  track("T1", (north-east: 2), type: "secondary", stroke: purple)
 })

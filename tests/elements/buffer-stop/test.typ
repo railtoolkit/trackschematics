@@ -6,11 +6,11 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     track((0, 0), ((dir): 1), name: "tr-" + dir)
   }
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     buffer-stop("tr-" + dir + ".end")
   }
 })
@@ -20,11 +20,11 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     track((rel: ((dir): 1), to: (0, 0)), (0, 0), name: "tr-" + dir)
   }
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     buffer-stop("tr-" + dir + ".start")
   }
 })
@@ -34,7 +34,7 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     track((0, 0), ((dir): 1), end: buffer-stop)
   }
 })
@@ -45,7 +45,7 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     track((rel: ((dir): 1), to: (0, 0)), (0, 0), start: buffer-stop)
   }
 })
@@ -55,7 +55,7 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     track((0, 0), ((dir): 1), end: "]")
   }
 })
@@ -66,7 +66,7 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+  for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
     track((rel: ((dir): 1), to: (0, 0)), (0, 0), start: "]")
   }
 })

@@ -6,7 +6,17 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  track((), (ne: 1), (e: 2), (se: 1), (s: 1), (sw: 1), (w: 1), (nw: 1), (n: 1))
+  track(
+    (),
+    (north-east: 1),
+    (east: 2),
+    (south-east: 1),
+    (south: 1),
+    (south-west: 1),
+    (west: 1),
+    (north-west: 1),
+    (north: 1),
+  )
 })
 
 #pagebreak()
@@ -15,11 +25,11 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  track((), (e: 1), (ne: 1), (e: 3), name: "tr1")
+  track((), (east: 1), (north-east: 1), (east: 3), name: "tr1")
 
-  track((1, 1), (e: "tr1"), stroke: orange)
-  track((2, 0), (ne: "tr1"), stroke: red)
-  track((4, 0), (n: "tr1"), stroke: purple)
+  track((1, 1), (east: "tr1"), stroke: orange)
+  track((2, 0), (north-east: "tr1"), stroke: red)
+  track((4, 0), (north: "tr1"), stroke: purple)
 })
 
 #pagebreak()
@@ -28,8 +38,8 @@
 #cetz.canvas({
   import railtoolkit-trackschematics.draw: *
 
-  track((), (e: 1), (ne: 2), (e: 1), (se: 2), (e: 1), name: "tr1")
-  track((7, 1), (w: "tr1"), stroke: red)
-  track((0, 1), (e: "tr1"), stroke: purple)
+  track((), (east: 1), (north-east: 2), (east: 1), (south-east: 2), (east: 1), name: "tr1")
+  track((7, 1), (west: "tr1"), stroke: red)
+  track((0, 1), (east: "tr1"), stroke: purple)
 })
 

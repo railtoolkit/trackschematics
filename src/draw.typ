@@ -8,7 +8,7 @@
 /// ```examplec
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
-/// track((), (e: 4), (ne: 2), name: "tr-1")
+/// track((), (east: 4), (north-east: 2), name: "tr-1")
 /// buffer-stop(())
 /// buffer-stop("tr-1.start")
 /// >>> })
@@ -19,7 +19,7 @@
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
 /// track(
-///   (),  (e: 4), (ne: 2),
+///   (),  (east: 4), (north-east: 2),
 ///   start: buffer-stop,
 ///   end: buffer-stop,
 ///   name: "tr-1"
@@ -62,7 +62,7 @@
 /// ```examplec
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
-/// track((), (e: 3), (ne: 2), (e: 4))
+/// track((), (east: 3), (north-east: 2), (east: 4))
 /// >>> })
 /// ```
 #let track(
@@ -75,14 +75,14 @@
   /// ```examplec
   /// >>> cetz.canvas({
   /// >>> import rts.draw: *
-  /// track((), (e: 7))
+  /// track((), (east: 7))
   /// >>> })
   /// ```
   ///
   /// ```examplec
   /// >>> cetz.canvas({
   /// >>> import rts.draw: *
-  /// track((), (e: 7), kind: "secondary")
+  /// track((), (east: 7), kind: "secondary")
   /// >>> })
   /// ```
   ///
@@ -98,7 +98,7 @@
   /// >>> cetz.canvas({
   /// >>> import rts.draw: *
   /// track(
-  ///   (),  (e: 2),
+  ///   (),  (east: 2),
   ///   start: buffer-stop,
   ///   name: "tr-1"
   /// )
@@ -111,7 +111,7 @@
   /// >>> cetz.canvas({
   /// >>> import rts.draw: *
   /// track(
-  ///   (),  (e: 2),
+  ///   (),  (east: 2),
   ///   start: "]",
   ///   name: "tr-1"
   /// )
@@ -126,7 +126,7 @@
   /// >>> cetz.canvas({
   /// >>> import rts.draw: *
   /// track(
-  ///   (),  (e: 2),
+  ///   (),  (east: 2),
   ///   end: buffer-stop,
   ///   name: "tr-1"
   /// )
@@ -193,16 +193,16 @@
 /// ```examplec
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
-/// track((), (e: 3), name: "tr-1")
+/// track((), (east: 3), name: "tr-1")
 /// turnout("tr-1.1")
-/// track((), (ne: 1), (e: 1))
+/// track((), (north-east: 1), (east: 1))
 ///
 /// track(
-///   (4,0), (e:1), (ne:1), (e:1),
+///   (4,0), (east:1), (north-east:1), (east:1),
 ///   name: "tr-2"
 /// )
 /// turnout("tr-2.1")
-/// track((), (se: 1), (e:1))
+/// track((), (south-east: 1), (east:1))
 /// >>> })
 /// ```
 ///
@@ -211,10 +211,10 @@
 /// ```examplec
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
-/// track((), (e: 4), name: "tr-1")
+/// track((), (east: 4), name: "tr-1")
 /// turnout("tr-1.1", name: "to-1")
-/// track("to-1", (se: 1), (e: 2))
-/// track("to-1", (ne: 1), (e: 2))
+/// track("to-1", (south-east: 1), (east: 2))
+/// track("to-1", (north-east: 1), (east: 2))
 /// >>> })
 /// ```
 ///
@@ -223,8 +223,8 @@
 /// ```examplec
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
-/// track((), (e: 8), name: "tr-1")
-/// track((0,-1), (e:1), (ne: 2), (e: 5))
+/// track((), (east: 8), name: "tr-1")
+/// track((0,-1), (east:1), (north-east: 2), (east: 5))
 /// turnout("tr-1.2")
 /// >>> })
 /// ```

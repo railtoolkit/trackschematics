@@ -58,9 +58,9 @@ To simplify the process of drawing track infrastructure, several options for def
 
       hide(track((0, 0), (1, 0)))
 
-      for dir in ("n", "ne", "e", "se", "s", "sw", "w", "nw") {
+      for dir in ("north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west") {
         line((0, 0), ((dir): 1), mark: (end: ">", fill: black), name: dir)
-        content((rel: ((dir): -.35)), [#dir], padding: 0em)
+        content((rel: ((dir): -.15)), [#dir], padding: 0em)
       }
     })
   ],
@@ -68,35 +68,35 @@ To simplify the process of drawing track infrastructure, several options for def
 
 #t-raw[(#t("key"): #t("number"))]
 
-#t("key"): one of the cardinal directions: #t-raw[n, ne, e, se, s, sw, w, nw]. \
+#t("key"): one of the cardinal directions: #t-raw[north, north-east, east, south-east, south, south-west, west, north-west]. \
 
 #example(```typc
 
 track(
   (),
-  (e: 7),
-  (ne: 1),
-  (n: 1),
-  (nw: 1),
-  (w: 1),
-  (sw: 3)
+  (east: 7),
+  (north-east: 1),
+  (north: 1),
+  (north-west: 1),
+  (west: 1),
+  (south-west: 3)
 )
 >>>
 >>>set-style(mark: (end: ">"), fill: purple, stroke: (dash: "dashed", paint: purple), content: (padding: .25))
 >>>
->>>line((0,-.25), (e: 7), name: "e")
->>>line((rel: (.25, .1)), (ne: 1), name: "ne")
->>>line((rel: (0, .25)), (n: 1), name: "n")
->>>line((rel: (-.1, .1)), (nw: 1), name: "nw")
->>>line((rel: (-.25, 0)), (w: 1), name: "w")
->>>line((rel: (-.25, -.1)), (sw: 3), name: "sw")
+>>>line((0,-.25), (east: 7), name: "e")
+>>>line((rel: (.25, .1)), (north-east: 1), name: "ne")
+>>>line((rel: (0, .25)), (north: 1), name: "n")
+>>>line((rel: (-.1, .1)), (north-west: 1), name: "nw")
+>>>line((rel: (-.25, 0)), (west: 1), name: "w")
+>>>line((rel: (-.25, -.1)), (south-west: 3), name: "sw")
 >>>
->>>content("e", [(e: 7)], anchor: "north")
->>>content("ne", [(ne: 1)], anchor: "north-west")
->>>content("n", [(n: 1)], anchor: "west")
->>>content("nw", [(nw: 1)], anchor: "south-west")
->>>content("w", [(w: 1)], anchor: "south")
->>>content("sw", [(sw: 1)], anchor: "south-east")
+>>>content("e", [(east: 7)], anchor: "north")
+>>>content("ne", [(north-east: 1)], anchor: "north-west")
+>>>content("n", [(north: 1)], anchor: "west")
+>>>content("nw", [(north-west: 1)], anchor: "south-west")
+>>>content("w", [(west: 1)], anchor: "south")
+>>>content("sw", [(south-west: 1)], anchor: "south-east")
 ```)
 
 === Position on track
@@ -114,7 +114,7 @@ The default anchors #t-raw[start] and #t-raw[end] are also supported.
 #example(```typc
 >>> set-style(circle: (radius: .15, stroke: none))
 track(
-  (), (e: 3), (ne:2), (e:3),
+  (), (east: 3), (north-east:2), (east:3),
   name: "tr-1"
 )
 circle("tr-1.start", fill: red)
@@ -128,8 +128,8 @@ circle("tr-1.end", fill: green)
 >>>
 >>>set-style(mark: (start: "o", end: ">"), stroke: (dash: "dashed"), content: (padding: .5em))
 >>>line((rel: (0,0) , to: "tr-1.start"), (rel: (0,0) , to: "tr-1.1"), mark: (fill: purple), stroke: purple, name: "purple")
->>>line((rel: (0,-.2) , to: "tr-1.start"), (e:3), (rel: (.2,-.1) , to: "tr-1.4"), mark: (fill: orange), stroke: orange, name: "orange")
->>>line((rel: (0,.2) , to: "tr-1.start"), (e:3), (ne: 2), (rel: (0,.2) , to: "tr-1.end"), mark: (fill: green), stroke: green, name: "green")
+>>>line((rel: (0,-.2) , to: "tr-1.start"), (east:3), (rel: (.2,-.1) , to: "tr-1.4"), mark: (fill: orange), stroke: orange, name: "orange")
+>>>line((rel: (0,.2) , to: "tr-1.start"), (east:3), (north-east: 2), (rel: (0,.2) , to: "tr-1.end"), mark: (fill: green), stroke: green, name: "green")
 >>>
 >>>content("tr-1.start", [start], anchor: "south")
 >>>content("purple.end", [1], anchor: "north")
@@ -143,17 +143,17 @@ Draw the track until it intersects with the specified track.
 
 #t-raw[(#t("key"): #t("str"))]
 
-#t("key"): one of the cardinal directions: #t-raw[n, ne, e, se, s, sw, w, nw]. \
+#t("key"): one of the cardinal directions: #t-raw[north, north-east, east, south-east, south, south-west, west, north-west]. \
 #t("str"): track name.
 
 #example(```typc
-track((), (e: 7), name:  "tr-1")
-track((0, 1), (e: 1), (se: "tr-1"))
+track((), (east: 7), name:  "tr-1")
+track((0, 1), (east: 1), (south-east: "tr-1"))
 >>>
 >>>set-style(mark: (end: ("|", ">"), start: "|"), fill: purple, stroke: (dash: "dashed", paint: purple), content: (padding: .25))
 >>>
->>>line((rel: (.1, .1), to: (1,1)), (se: 1))
->>>line((), (se: 1), stroke: gray, mark: none)
+>>>line((rel: (.1, .1), to: (1,1)), (south-east: 1))
+>>>line((), (south-east: 1), stroke: gray, mark: none)
 ```)
 
 #tidy.show-module(docs, style: tidy.styles.default)
