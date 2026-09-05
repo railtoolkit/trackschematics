@@ -1,5 +1,10 @@
 #import "@preview/cetz:0.5.2"
-#import "/src/utils/track.typ": drawables-to-points, one-x-or-y-coordinate-on-track
+#import "/src/utils/track.typ": drawables-to-points, pos-on-track
+
+// https://github.com/typst/typst/issues/6599#issuecomment-3074406059
+#let is-floatable(x) = (
+  type(x) in (bool, decimal, float, int) or (type(x) == str and x.match(regex("\A-?(?:\d+|\d*\.\d*)\z")) != none)
+)
 
 #let init() = {
   cetz.draw.get-ctx(ctx => {
@@ -19,11 +24,24 @@
 
     cetz.draw.register-coordinate-resolver((ctx, c) => {
       // Resolves coordinates referring to track
-      // element((track: "track-1", x: 1))
-      // element((track: "track-1", y: 1))
-      if type(c) == dictionary and "track" in c {
-        assert(c.track in ctx.nodes, message: "track was not found: " + c.track)
-        c = one-x-or-y-coordinate-on-track(cetz, ctx, ..c)
+      // element("track-1.1")
+      if type(c) == str and c.contains(".") {
+        let (name, ..anchor) = c.split(".")
+
+        anchor = anchor.fold("", (acc, s) => acc + s)
+
+        if name in ctx.trackschematics.tracks and is-floatable(anchor) {
+          c = pos-on-track(cetz, ctx, name, float(anchor))
+          let b = c
+        }
+      }
+
+      // Resolves coordinates referring to track
+      // element((name: "track-1", anchor: 1))
+      if type(c) == dictionary and "name" in c.keys() and "anchor" in c.keys() and is-floatable(c.anchor) {
+        if c.name in ctx.trackschematics.tracks and is-floatable(c.anchor) {
+          c = pos-on-track(cetz, ctx, c.name, float(c.anchor))
+        }
       }
 
       // Shortcut for drawing in cardinal directions

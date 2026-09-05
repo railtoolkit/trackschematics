@@ -1,5 +1,5 @@
 #import "/src/utils/init.typ": cetz, init
-#import "/src/utils/track.typ": drawables-to-points, point-is-on-line, x-or-y-coordinate-on-track
+#import "/src/utils/track.typ": drawables-to-points, point-is-on-line
 #import "/src/utils/turnouts.typ": draw-finished-turnouts, link-track-to-turnouts
 // Change style to named element
 // Important so user can change default styles

@@ -11,9 +11,10 @@
 
   track((), (e: 6), name: "tr-1")
 
-  turnout((track: "tr-1", x: 1))
+  turnout("tr-1.1")
   track((), (ne: 1), (e: 2), (se: 1), name: "tr-2")
   turnout(())
 
-  track((track: "tr-2", x: 4), (e: 1), end: "]")
+  track("tr-2.3", (e: 1), end: "]")
 })
+

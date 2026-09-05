@@ -103,10 +103,13 @@ track(
 
 To position elements on a referenced track.
 
-#t-raw[(track: #t("str"), x: #t("none") #t("number"), y:  #t("none") #t("number"))]
+#t-raw[#t("str").#t("number")] or #t-raw[(name: #t("str"), anchor: #t("number"))]
 
-#t("str"): track name. \
-Either #t-raw[x] or #t-raw[y] must be specified.
+The syntax is identical to the anchor syntax of CeTZ.
+For tracks the default functionality of CeTZ is overwritten to match with the length calculations of track schematics.
+
+The default anchors #t-raw[start] and #t-raw[end] are also supported.
+
 
 #example(```typc
 >>> set-style(circle: (radius: .15, stroke: none))
@@ -114,18 +117,24 @@ track(
   (), (e: 3), (ne:2), (e:3),
   name: "tr-1"
 )
-circle((track: "tr-1", x: 1), fill: purple)
-circle((track: "tr-1", x: 4), fill: orange)
-circle((track: "tr-1", y: 2), fill: green)
+circle("tr-1.start", fill: red)
+circle("tr-1.1", fill: purple)
+// long syntax:
+circle(
+  (name: "tr-1", anchor: 4),
+  fill: orange
+)
+circle("tr-1.end", fill: green)
 >>>
->>>set-style(mark: (end: ">"), stroke: (dash: "dashed"), content: (padding: .25em))
->>>line((1,-1), (rel: (0,-.2) , to: (track: "tr-1", x: 1)), mark: (fill: purple), stroke: purple, name: "purple")
->>>line((4,-1), (rel: (0,-.2) , to: (track: "tr-1", x: 4)), mark: (fill: orange), stroke: orange, name: "orange")
->>>line((0, 2), (rel: (-.2, 0) , to: (track: "tr-1", y: 2)), mark: (fill: green), stroke: green, name: "green")
+>>>set-style(mark: (start: "o", end: ">"), stroke: (dash: "dashed"), content: (padding: .5em))
+>>>line((rel: (0,0) , to: "tr-1.start"), (rel: (0,0) , to: "tr-1.1"), mark: (fill: purple), stroke: purple, name: "purple")
+>>>line((rel: (0,-.2) , to: "tr-1.start"), (e:3), (rel: (.2,-.1) , to: "tr-1.4"), mark: (fill: orange), stroke: orange, name: "orange")
+>>>line((rel: (0,.2) , to: "tr-1.start"), (e:3), (ne: 2), (rel: (0,.2) , to: "tr-1.end"), mark: (fill: green), stroke: green, name: "green")
 >>>
->>>content("purple.15%", [x: 1], anchor: "west")
->>>content("orange.10%", [x: 4], anchor: "west")
->>>content("green", [y: 2], anchor: "north")
+>>>content("tr-1.start", [start], anchor: "south")
+>>>content("purple.end", [1], anchor: "north")
+>>>content("orange.end", [4], anchor: "north")
+>>>content("green.end", [end], anchor: "south")
 ```)
 
 === Track intersection in cardinal direction

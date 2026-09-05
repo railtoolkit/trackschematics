@@ -45,9 +45,9 @@
                 track(straight_start, (0, 0), straight_end, name: "T1")
 
                 if straight_start.at(0) == 0 {
-                  turnout((track: "T1", y: 0), name: "W1")
+                  turnout("T1.1", name: "W1")
                 } else {
-                  turnout((track: "T1", x: 0), name: "W1")
+                  turnout("T1.1", name: "W1")
                 }
 
                 track("W1", diverging_point, stroke: purple)
@@ -120,9 +120,9 @@
                   track(straight_start, (0, 0), straight_end, name: "T1")
 
                   if straight_start.at(0) == 0 {
-                    turnout((track: "T1", y: 0), name: "W1")
+                    turnout("T1.1", name: "W1")
                   } else {
-                    turnout((track: "T1", x: 0), name: "W1")
+                    turnout("T1.1", name: "W1")
                   }
 
                   track((0, 0), diverging_start, stroke: purple)

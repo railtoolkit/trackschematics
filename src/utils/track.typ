@@ -38,54 +38,29 @@
   }
 }
 
-#let x-or-y-coordinate-on-track(cetz, ctx, track-name, x: none, y: none) = {
-  assert((x != none and y == none) or (x == none and y != none))
+#let pos-on-track(cetz, ctx, name, pos) = {
+  let points = drawables-to-points(cetz, ctx, name)
 
-  let points = drawables-to-points(cetz, ctx, track-name)
+  for (index, start) in points.slice(0, -1).enumerate() {
+    let end = points.at(index + 1)
+    let diff = cetz.vector.sub(end, start)
 
-  let pos = { if x != none { x } else { y } }
-  let pos-index = { if x != none { 0 } else { 1 } }
+    let length = {
+      if diff.at(0) != 0 {
+        calc.abs(diff.at(0))
+      } else {
+        calc.abs(diff.at(1))
+      }
+    }
 
-  // Find correct section to interpolate for x or y position
-  let pts = for index in range(0, points.len() - 1) {
-    let (start, end) = (points.at(index + 1), points.at(index)).sorted(key: it => it.at(pos-index))
-    let (start-pos, end-pos) = (start, end).map(p => p.at(pos-index))
-
-    if start-pos == end-pos {
+    if pos > length {
+      pos = pos - length
       continue
     }
 
-    if start-pos > pos or end-pos < pos {
-      continue
-    }
+    let rel-pos = cetz.vector.scale(diff, 1 / length * pos)
 
-    let frac = (pos - start-pos) / (end-pos - start-pos)
-    let pt = range(0, start.len()).map(i => start.at(i) + (end.at(i) - start.at(i)) * frac)
-
-    (pt,)
+    cetz.vector.add(start, rel-pos)
+    break
   }
-
-  if pts != none {
-    pts = pts.dedup()
-  }
-
-  pts
-}
-
-#let one-x-or-y-coordinate-on-track(cetz, ctx, track: none, x: none, y: none) = {
-  assert(
-    x != none or y != none,
-    message: "Track referencing coordinate expects x or y. None were found.",
-  )
-
-  assert(
-    x == none or y == none,
-    message: "Track referencing coordinate expects x or y. Both were found.",
-  )
-
-  let pts = x-or-y-coordinate-on-track(cetz, ctx, track, x: x, y: y)
-
-  assert(pts.len() == 1, message: "Track referencing coordinate couldn't find correct coordinate.")
-
-  return pts.at(0)
 }

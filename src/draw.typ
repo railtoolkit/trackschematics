@@ -194,14 +194,14 @@
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
 /// track((), (e: 3), name: "tr-1")
-/// turnout((track: "tr-1", x: 1))
+/// turnout("tr-1.1")
 /// track((), (ne: 1), (e: 1))
 ///
 /// track(
 ///   (4,0), (e:1), (ne:1), (e:1),
 ///   name: "tr-2"
 /// )
-/// turnout((track: "tr-2", x: 5))
+/// turnout("tr-2.1")
 /// track((), (se: 1), (e:1))
 /// >>> })
 /// ```
@@ -212,7 +212,7 @@
 /// >>> cetz.canvas({
 /// >>> import rts.draw: *
 /// track((), (e: 4), name: "tr-1")
-/// turnout((track: "tr-1", x: 1), name: "to-1")
+/// turnout("tr-1.1", name: "to-1")
 /// track("to-1", (se: 1), (e: 2))
 /// track("to-1", (ne: 1), (e: 2))
 /// >>> })
@@ -225,7 +225,7 @@
 /// >>> import rts.draw: *
 /// track((), (e: 8), name: "tr-1")
 /// track((0,-1), (e:1), (ne: 2), (e: 5))
-/// turnout((track: "tr-1", x:2))
+/// turnout("tr-1.2")
 /// >>> })
 /// ```
 ///
