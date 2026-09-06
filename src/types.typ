@@ -1,6 +1,7 @@
 #import "/src/utils/init.typ": cetz, init
 #import "/src/utils/track.typ": drawables-to-points, point-is-on-line
 #import "/src/utils/turnouts.typ": draw-finished-turnouts, link-track-to-turnouts
+#import "/src/utils/error.typ": element-to-string
 // Change style to named element
 // Important so user can change default styles
 #let set-style-to(style, name) = {
@@ -91,6 +92,12 @@
     let center-raw = point
     let (ctx, center) = cetz.coordinate.resolve(ctx, center-raw)
     let styles = resolve-styles(ctx, args.named(), type-def.name)
+
+    assert(
+      ctx.trackschematics.turnouts.find(t => t.center == center) == none,
+      message: element-to-string("turnout", center-raw, name)
+        + "A tournout was already placed at this position. Only one turnout per position is allowed.",
+    )
 
     // Add anchor for turnout center
     if name != none {
