@@ -40,7 +40,14 @@
 
 #let pos-on-track(cetz, ctx, name, pos) = {
   let points = drawables-to-points(cetz, ctx, name)
+  let c
 
+  assert(
+    pos >= 0,
+    message: "There is no position \"" + str(pos) + "\" on track \"" + name + "\". \n" + "Select a positive position.",
+  )
+
+  let length-sum = 0
   for (index, start) in points.slice(0, -1).enumerate() {
     let end = points.at(index + 1)
     let diff = cetz.vector.sub(end, start)
@@ -53,14 +60,31 @@
       }
     }
 
-    if pos > length {
-      pos = pos - length
+    length-sum += length
+
+    if pos > length-sum {
       continue
     }
+    
+    let start-pos = length-sum - length
+    let rel-pos = cetz.vector.scale(diff, (pos - start-pos) / length)
 
-    let rel-pos = cetz.vector.scale(diff, 1 / length * pos)
-
-    cetz.vector.add(start, rel-pos)
+    c = cetz.vector.add(start, rel-pos)
     break
   }
+
+  assert(
+    c != none,
+    message: "There is no position \""
+      + str(pos)
+      + "\" on track \""
+      + name
+      + "\" with a length of "
+      + str(length-sum)
+      + ". \n"
+      + "Select a position betwetween 0 and "
+      + str(length-sum)
+      + ".",
+  )
+  c
 }
